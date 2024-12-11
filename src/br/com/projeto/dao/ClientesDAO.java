@@ -64,7 +64,8 @@ public class ClientesDAO {
 
     //Metodo alterar  clientes
     public void alterarClientes() {
-
+      String select = "Select * from tb_clientes where nome like a%";
+        
     }
 
     //Metodo excluir  clientes
@@ -77,4 +78,5 @@ public class ClientesDAO {
         } catch (Exception e) {
         }
     }
+    
 }

@@ -4,6 +4,8 @@
  */
 package br.com.projeto.model;
 
+import br.com.projeto.dao.ClientesDAO;
+
 /**
  *
  * @author barbo
@@ -27,6 +29,7 @@ public class Clientes {
     private String estado;
 
     public Clientes() {
+        
     }
     
 
