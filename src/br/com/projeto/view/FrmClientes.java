@@ -129,6 +129,15 @@ public class FrmClientes extends javax.swing.JFrame {
         }
     }
 
+    //Método de buscar por cep
+    private void buscarCep() {
+        Clientes suporte = new Utilitarios().buscarEndereco(txtCep.getText());
+        txtBairro.setText(suporte.getBairro());
+        txtCidade.setText(suporte.getCidade());
+        txtEndereco.setText(suporte.getEndereco());
+        cboUF.setSelectedItem(suporte.getEstado());
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -291,6 +300,11 @@ public class FrmClientes extends javax.swing.JFrame {
             ex.printStackTrace();
         }
         txtCep.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtCep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCepActionPerformed(evt);
+            }
+        });
 
         jLabel30.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel30.setText("Nome:");
@@ -636,8 +650,13 @@ public class FrmClientes extends javax.swing.JFrame {
         txtBairro.setText(model.getBairro());
         txtCidade.setText(model.getCidade());
         cboUF.setSelectedItem(model.getEstado());
-        
+
     }//GEN-LAST:event_btnPesquisarCpfActionPerformed
+
+    private void txtCepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCepActionPerformed
+        // TODO add your handling code here:
+        buscarCep();
+    }//GEN-LAST:event_txtCepActionPerformed
 
     /**
      * @param args the command line arguments
