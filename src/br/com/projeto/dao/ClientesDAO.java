@@ -63,18 +63,48 @@ public class ClientesDAO {
 
     }
 
-    //Metodo alterar  clientes
-    public void alterarClientes() {
+    //Metodo alterar  clientes =?
+    public void update(Clientes obj) {
+        String update = "update tb_clientes set nome=?,rg=?,cpf=?,email=?,telefone=?,"
+                + "celular=?,cep=?,endereco=?,numero=?,complemento=?,bairro=?,cidade=?,estado=?"
+                + "where id=?";
+        try {
+            preparar = conexao.prepareStatement(update);
 
+            preparar.setString(1, obj.getNome());
+            preparar.setString(2, obj.getRg());
+            preparar.setString(3, obj.getCpf());
+            preparar.setString(4, obj.getEmail());
+            preparar.setString(5, obj.getTelefone());
+            preparar.setString(6, obj.getCelular());
+            preparar.setString(7, obj.getCep());
+            preparar.setString(8, obj.getEndereco());
+            preparar.setInt(9, obj.getNumero());
+            preparar.setString(10, obj.getComplemento());
+            preparar.setString(11, obj.getBairro());
+            preparar.setString(12, obj.getCidade());
+            preparar.setString(13, obj.getEstado());
+            preparar.setInt(14, obj.getId());
+
+            preparar.execute();
+            preparar.close();
+
+            JOptionPane.showMessageDialog(null, "Alterado com sucessso");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
     }
 
     //Metodo excluir  clientes
-    public void excluirClientes(Clientes obj) {
+    public void excluirCliente(Clientes obj) {
         try {
             String delete = "delete from tb_clientes where id = ?";
             preparar = conexao.prepareStatement(delete);
             preparar.setInt(1, obj.getId());
             preparar.executeUpdate();
+            preparar.close();
+            
+             JOptionPane.showMessageDialog(null, "Excluido com sucesso");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
@@ -94,24 +124,26 @@ public class ClientesDAO {
                 Clientes obj = new Clientes();
                 obj.setId(result.getInt(1));
                 obj.setNome(result.getString(2));
-                obj.setRg(result.getString(2));
-                obj.setCpf(result.getString(3));
-                obj.setEmail(result.getString(3));
-                obj.setTelefone(result.getString(3));
-                obj.setCep(result.getString(3));
-                obj.setEndereco(result.getString(3));
-                obj.setNumero(result.getInt(3));
-                obj.setComplemento(result.getString(3));
-                obj.setBairro(result.getString(3));
-                obj.setCidade(result.getString(3));
-                obj.setEstado(result.getString(3));
+                obj.setRg(result.getString(3));
+                obj.setCpf(result.getString(4));
+                obj.setEmail(result.getString(5));
+                obj.setTelefone(result.getString(6));
+                obj.setCelular(result.getString(7));
+                obj.setCep(result.getString(8));
+                obj.setEndereco(result.getString(9));
+                obj.setNumero(result.getInt(10));
+                obj.setComplemento(result.getString(11));
+                obj.setBairro(result.getString(12));
+                obj.setCidade(result.getString(13));
+                obj.setEstado(result.getString(14));
 
                 lista.add(obj);
 
             }
+            preparar.close();
             return lista;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+            JOptionPane.showMessageDialog(null, "Aqui " + e);
             return null;
         }
 
