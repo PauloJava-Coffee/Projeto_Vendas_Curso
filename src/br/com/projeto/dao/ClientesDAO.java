@@ -21,12 +21,12 @@ import javax.swing.JOptionPane;
  */
 public class ClientesDAO {
 
-    private Connection conexao;
+    private final Connection conexao;
     private PreparedStatement preparar;
     private ResultSet result;
 
     public ClientesDAO() {
-        conexao = conexao = new ConnectionFactory().getConnection();
+       conexao = new ConnectionFactory().getConnection();
     }
 
     //Metodo cadastrar clientes
