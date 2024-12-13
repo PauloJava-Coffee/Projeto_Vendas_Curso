@@ -170,7 +170,7 @@ public class FuncionariosDAO {
                 lista.add(suporte);
                 System.out.println("olá");
             }
-                  
+
             return lista;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
@@ -204,26 +204,27 @@ public class FuncionariosDAO {
 
         return suporte;
     }
-    
+
     //Metodo de login
-    public int logar(String email, String senha){
-        String sql = "select * from tb_funcionarios where email=? and senha = ?";
+    public String logar(String email, String senha) {
+        String sql = "select nome from tb_funcionarios where email=? and senha = ?";
         try {
             preparar = conexao.prepareStatement(sql);
-            preparar.setString(1,email);
-            preparar.setString(2,senha);
+            preparar.setString(1, email);
+            preparar.setString(2, senha);
             result = preparar.executeQuery();
-            if(result.next()){
+            if (result.next()) {
                 frmMenu menu = new frmMenu();
                 menu.setVisible(true);
-            }else{
+                return result.getString(1);
+            } else {
                 JOptionPane.showMessageDialog(null, "Dados incorretos");
             }
-            return 1;
+            return null;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
-            return 0;
+            return null;
         }
-        
+
     }
 }

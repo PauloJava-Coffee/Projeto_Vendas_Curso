@@ -142,8 +142,9 @@ public class frmLogin extends javax.swing.JFrame {
         String email, senha;
         email = txtEmail.getText();
         senha = txtSenha.getText();
-        int result = new FuncionariosDAO().logar(email, senha);
-        if (result > 0) {
+        String nome = new FuncionariosDAO().logar(email, senha);
+        if (nome != null) {
+            frmMenu.lblNome.setText(nome);
             this.dispose();
         }
 
