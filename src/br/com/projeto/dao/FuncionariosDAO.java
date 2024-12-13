@@ -7,6 +7,7 @@ package br.com.projeto.dao;
 import br.com.projeto.jdbc.ConnectionFactory;
 import br.com.projeto.model.Clientes;
 import br.com.projeto.model.Funcionarios;
+import br.com.projeto.view.frmMenu;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -202,5 +203,27 @@ public class FuncionariosDAO {
         suporte.setEstado(result.getString(17));
 
         return suporte;
+    }
+    
+    //Metodo de login
+    public int logar(String email, String senha){
+        String sql = "select * from tb_funcionarios where email=? and senha = ?";
+        try {
+            preparar = conexao.prepareStatement(sql);
+            preparar.setString(1,email);
+            preparar.setString(2,senha);
+            result = preparar.executeQuery();
+            if(result.next()){
+                frmMenu menu = new frmMenu();
+                menu.setVisible(true);
+            }else{
+                JOptionPane.showMessageDialog(null, "Dados incorretos");
+            }
+            return 1;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+            return 0;
+        }
+        
     }
 }
