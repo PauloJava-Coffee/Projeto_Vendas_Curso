@@ -4,12 +4,12 @@
  */
 package br.com.projeto.view;
 
-import br.com.projeto.dao.ClientesDAO;
 import br.com.projeto.dao.FuncionariosDAO;
 import br.com.projeto.model.Clientes;
 import br.com.projeto.model.Funcionarios;
 import br.com.projeto.model.Utilitarios;
 import java.util.List;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -83,14 +83,16 @@ public class FrmFuncionarios extends javax.swing.JFrame {
 
     //Alterar dados do cadastro do cliente
     private void alterar() {
-        Clientes model = new Clientes();
-        ClientesDAO dao = new ClientesDAO();
+        Funcionarios model = new Funcionarios();
 
         model.setId(Integer.parseInt(txtCodigo.getText()));
         model.setNome(txtNome.getText());
         model.setRg(txtRG.getText());
         model.setCpf(txtCpf.getText());
         model.setEmail(txtEmail.getText());
+        model.setSenha(txtSenha.getText());
+        model.setCargo(txtCargo.getText());
+        model.setNivelAcesso(cboNivel.getSelectedItem().toString());
         model.setTelefone(txtTelefone.getText());
         model.setCelular(txtCelular.getText());
         model.setCep(txtCep.getText());
@@ -101,34 +103,35 @@ public class FrmFuncionarios extends javax.swing.JFrame {
         model.setCidade(txtCidade.getText());
         model.setEstado(cboUF.getSelectedItem().toString());
 
-        dao.update(model);
+        new FuncionariosDAO().updateFuncionarios(model);
 
     }
 
-    //Método buscar cliente por  nome
-    private void buscar() {
-        ClientesDAO dao = new ClientesDAO();
-        DefaultTableModel dados = (DefaultTableModel) tblFuncionarios.getModel();
-        dados.setNumRows(0);
-
-        List<Clientes> lista = dao.buscarPorNome(txtBuscar.getText());
-
-        for (Clientes c : lista) {
-            dados.addRow(new Object[]{
-                c.getId(),
-                c.getNome(),
-                c.getRg(),
-                c.getCpf(),
-                c.getEmail(),
-                c.getTelefone(),
-                c.getCelular(),
-                c.getCep(),
-                c.getEndereco(),
-                c.getNumero(),
-                c.getComplemento(),
-                c.getBairro(),
-                c.getCidade(),
-                c.getEstado()
+    //Método buscar funcionários por  nome
+    private void buscarPorNome() {
+        DefaultTableModel tabela = (DefaultTableModel) tblFuncionarios.getModel();
+        tabela.setNumRows(0);
+        FuncionariosDAO dado = new FuncionariosDAO();
+        List<Funcionarios> lista = dado.buscarPorNome(txtBuscar.getText());
+        for (Funcionarios f : lista) {
+            tabela.addRow(new Object[]{
+                f.getId(),
+                f.getNome(),
+                f.getRg(),
+                f.getCpf(),
+                f.getEmail(),
+                f.getSenha(),
+                f.getCargo(),
+                f.getNivelAcesso(),
+                f.getTelefone(),
+                f.getCelular(),
+                f.getCep(),
+                f.getEndereco(),
+                f.getNumero(),
+                f.getComplemento(),
+                f.getBairro(),
+                f.getCidade(),
+                f.getEstado()
             });
         }
     }
@@ -512,6 +515,16 @@ public class FrmFuncionarios extends javax.swing.JFrame {
         jLabel2.setText("Nome:");
 
         txtBuscar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtBuscar.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                txtBuscarCaretUpdate(evt);
+            }
+        });
+        txtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtBuscarKeyTyped(evt);
+            }
+        });
 
         btnBuscar.setText("Buscar");
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
@@ -694,20 +707,23 @@ public class FrmFuncionarios extends javax.swing.JFrame {
     }//GEN-LAST:event_tblFuncionariosMouseClicked
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        buscar();
+        buscarPorNome();
 
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnPesquisarCpfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarCpfActionPerformed
         // TODO add your handling code here:
-        Clientes model = new ClientesDAO().pesquisarPorCpf(txtCpf.getText());
+        Funcionarios model = new FuncionariosDAO().buscarPorCpf(txtCpf.getText());
         txtCodigo.setText(model.getId() + "");
         txtNome.setText(model.getNome());
         txtRG.setText(model.getRg());
         txtEmail.setText(model.getEmail());
+        txtSenha.setText(model.getSenha());
+        txtCargo.setText(model.getCargo());
+        cboNivel.setSelectedItem(model.getNivelAcesso());
         txtTelefone.setText(model.getTelefone());
         txtCelular.setText(model.getCelular());
-        txtCep.setText(model.getCpf());
+        txtCep.setText(model.getCep());
         txtEndereco.setText(model.getEndereco());
         txtNumero.setText(model.getNumero() + "");
         txtComplemento.setText(model.getComplemento());
@@ -732,9 +748,18 @@ public class FrmFuncionarios extends javax.swing.JFrame {
         if (txtCep.getCaretPosition() == 11) {
             buscarCep();
             System.out.println("i");
-
         }
     }//GEN-LAST:event_txtCepCaretUpdate
+
+    private void txtBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyTyped
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_txtBuscarKeyTyped
+
+    private void txtBuscarCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtBuscarCaretUpdate
+        // TODO add your handling code here:
+        buscarPorNome();
+    }//GEN-LAST:event_txtBuscarCaretUpdate
 
     /**
      * @param args the command line arguments

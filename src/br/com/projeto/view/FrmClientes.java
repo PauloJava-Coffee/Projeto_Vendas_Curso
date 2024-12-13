@@ -653,7 +653,7 @@ public class FrmClientes extends javax.swing.JFrame {
         txtEmail.setText(model.getEmail());
         txtTelefone.setText(model.getTelefone());
         txtCelular.setText(model.getCelular());
-        txtCep.setText(model.getCpf());
+        txtCep.setText(model.getCep());
         txtEndereco.setText(model.getEndereco());
         txtNumero.setText(model.getNumero() + "");
         txtComplemento.setText(model.getComplemento());

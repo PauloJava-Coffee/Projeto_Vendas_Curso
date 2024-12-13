@@ -10,6 +10,7 @@ import br.com.projeto.model.Funcionarios;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -74,24 +75,7 @@ public class FuncionariosDAO {
             preparar = conexao.prepareStatement(select);
             result = preparar.executeQuery();
             while (result.next()) {
-                Funcionarios dados = new Funcionarios();
-                dados.setId(Integer.parseInt(result.getString(1)));
-                dados.setNome(result.getString(2));
-                dados.setRg(result.getString(3));
-                dados.setCpf(result.getString(4));
-                dados.setEmail(result.getString(5));
-                dados.setSenha(result.getString(6));
-                dados.setCargo(result.getString(7));
-                dados.setNivelAcesso(result.getString(8));
-                dados.setTelefone(result.getString(9));
-                dados.setCelular(result.getString(10));
-                dados.setCep(result.getString(11));
-                dados.setEndereco(result.getString(12));
-                dados.setNumero(Integer.parseInt(result.getString(13)));
-                dados.setComplemento(result.getString(14));
-                dados.setBairro(result.getString(15));
-                dados.setCidade(result.getString(16));
-                dados.setEstado(result.getString(17));
+                Funcionarios dados = select(result);
                 lista.add(dados);
             }
             preparar.close();
@@ -103,9 +87,10 @@ public class FuncionariosDAO {
 
     }
 
-    /*Metodo alterar  clientes =?
-    public void update(Clientes obj) {
-        String update = "update tb_clientes set nome=?,rg=?,cpf=?,email=?,telefone=?,"
+    //Metodo alterar  clientes =?
+    public void updateFuncionarios(Funcionarios obj) {
+        String update = "update tb_funcionarios set nome=?,rg=?,cpf=?,email=?,senha =?,"
+                + "cargo=?, nivel_acesso=?, telefone=?,"
                 + "celular=?,cep=?,endereco=?,numero=?,complemento=?,bairro=?,cidade=?,estado=?"
                 + "where id=?";
         try {
@@ -115,16 +100,19 @@ public class FuncionariosDAO {
             preparar.setString(2, obj.getRg());
             preparar.setString(3, obj.getCpf());
             preparar.setString(4, obj.getEmail());
-            preparar.setString(5, obj.getTelefone());
-            preparar.setString(6, obj.getCelular());
-            preparar.setString(7, obj.getCep());
-            preparar.setString(8, obj.getEndereco());
-            preparar.setInt(9, obj.getNumero());
-            preparar.setString(10, obj.getComplemento());
-            preparar.setString(11, obj.getBairro());
-            preparar.setString(12, obj.getCidade());
-            preparar.setString(13, obj.getEstado());
-            preparar.setInt(14, obj.getId());
+            preparar.setString(5, obj.getSenha());
+            preparar.setString(6, obj.getCargo());
+            preparar.setString(7, obj.getNivelAcesso());
+            preparar.setString(8, obj.getTelefone());
+            preparar.setString(9, obj.getCelular());
+            preparar.setString(10, obj.getCep());
+            preparar.setString(11, obj.getEndereco());
+            preparar.setInt(12, obj.getNumero());
+            preparar.setString(13, obj.getComplemento());
+            preparar.setString(14, obj.getBairro());
+            preparar.setString(15, obj.getCidade());
+            preparar.setString(16, obj.getEstado());
+            preparar.setInt(17, obj.getId());
 
             preparar.execute();
             preparar.close();
@@ -133,7 +121,8 @@ public class FuncionariosDAO {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
-    }*/
+    }
+
     //Metodo excluir funcionarios
     public void deletarFuncionario(String id) {
         String delete = "delete from tb_funcionarios where id = ?";
@@ -147,5 +136,71 @@ public class FuncionariosDAO {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
+    }
+
+    public Funcionarios buscarPorCpf(String cpf) {
+        String select = "select * from tb_funcionarios where cpf=?";
+        try {
+            preparar = conexao.prepareStatement(select);
+            preparar.setString(1, cpf);
+            result = preparar.executeQuery();
+            if (result.next()) {
+                return select(result);
+            } else {
+                JOptionPane.showMessageDialog(null, "CPF inválido");
+                return null;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+            return null;
+        }
+
+    }
+
+    public List<Funcionarios> buscarPorNome(String nome) {
+        List<Funcionarios> lista = new ArrayList<>();
+        String select = "select * from tb_funcionarios where nome like ?";
+        try {
+            preparar = conexao.prepareStatement(select);
+            preparar.setString(1, nome + "%");
+            result = preparar.executeQuery();
+            while (result.next()) {
+                Funcionarios suporte = select(result);
+                lista.add(suporte);
+                System.out.println("olá");
+            }
+                  
+            return lista;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+            return null;
+        }
+
+    }
+
+    //Método para armazenar o resultado de uma consulta
+    //em um objeto da camada model
+    private Funcionarios select(ResultSet result) throws SQLException {
+        Funcionarios suporte = new Funcionarios();
+
+        suporte.setId(result.getInt(1));
+        suporte.setNome(result.getString(2));
+        suporte.setRg(result.getString(3));
+        suporte.setCpf(result.getString(4));
+        suporte.setEmail(result.getString(5));
+        suporte.setSenha(result.getString(6));
+        suporte.setCargo(result.getString(7));
+        suporte.setNivelAcesso(result.getString(8));
+        suporte.setTelefone(result.getString(9));
+        suporte.setCelular(result.getString(10));
+        suporte.setCep(result.getString(11));
+        suporte.setEndereco(result.getString(12));
+        suporte.setNumero(result.getInt(13));
+        suporte.setComplemento(result.getString(14));
+        suporte.setBairro(result.getString(15));
+        suporte.setCidade(result.getString(16));
+        suporte.setEstado(result.getString(17));
+
+        return suporte;
     }
 }
