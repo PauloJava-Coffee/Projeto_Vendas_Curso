@@ -8,8 +8,9 @@ import br.com.projeto.dao.FuncionariosDAO;
 import br.com.projeto.model.Clientes;
 import br.com.projeto.model.Funcionarios;
 import br.com.projeto.model.Utilitarios;
+import java.awt.Image;
 import java.util.List;
-import javax.swing.JFileChooser;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -51,9 +52,12 @@ public class FrmFuncionarios extends javax.swing.JFrame {
             });
         }
     }
-
+//CONTRUTOR
     public FrmFuncionarios() {
         initComponents();
+        ImageIcon icone = new ImageIcon(getClass().getResource("/imagens/funcionarios.png"));
+        Image imagem = icone.getImage();
+        this.setIconImage(imagem);
     }
 
     //Cdastrar funcionário
@@ -204,7 +208,8 @@ public class FrmFuncionarios extends javax.swing.JFrame {
         btnNovo = new javax.swing.JButton();
         btnPesquisarCpf = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Controle De Funcionários");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
                 formWindowActivated(evt);

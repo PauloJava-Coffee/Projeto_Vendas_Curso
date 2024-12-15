@@ -5,9 +5,9 @@
 package br.com.projeto.dao;
 
 import br.com.projeto.jdbc.ConnectionFactory;
-import br.com.projeto.model.Clientes;
 import br.com.projeto.model.Funcionarios;
 import br.com.projeto.view.frmMenu;
+import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -61,7 +61,7 @@ public class FuncionariosDAO {
 
             preparar.close();
 
-        } catch (Exception e) {
+        } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }
 
@@ -81,7 +81,7 @@ public class FuncionariosDAO {
             }
             preparar.close();
             return lista;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
             return null;
         }
@@ -119,7 +119,7 @@ public class FuncionariosDAO {
             preparar.close();
 
             JOptionPane.showMessageDialog(null, "Alterado com sucessso");
-        } catch (Exception e) {
+        } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }
     }
@@ -134,7 +134,7 @@ public class FuncionariosDAO {
             preparar.execute();
             preparar.close();
             JOptionPane.showMessageDialog(null, "Deletado com sucesso");
-        } catch (Exception e) {
+        } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }
     }
@@ -151,7 +151,7 @@ public class FuncionariosDAO {
                 JOptionPane.showMessageDialog(null, "CPF inválido");
                 return null;
             }
-        } catch (Exception e) {
+        } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(null, e);
             return null;
         }
@@ -170,12 +170,11 @@ public class FuncionariosDAO {
                 lista.add(suporte);
                 System.out.println("olá");
             }
-
-            return lista;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
             return null;
         }
+          return lista;
 
     }
 
@@ -206,8 +205,8 @@ public class FuncionariosDAO {
     }
 
     //Metodo de login
-    public String logar(String email, String senha) {
-        String sql = "select nome from tb_funcionarios where email=? and senha = ?";
+    public Funcionarios logar(String email, String senha) {
+        String sql = "select nome,nivel_acesso from tb_funcionarios where email=? and senha = ?";
         try {
             preparar = conexao.prepareStatement(sql);
             preparar.setString(1, email);
@@ -216,12 +215,12 @@ public class FuncionariosDAO {
             if (result.next()) {
                 frmMenu menu = new frmMenu();
                 menu.setVisible(true);
-                return result.getString(1);
+                return new Funcionarios(result.getString(1), result.getString(2));
             } else {
                 JOptionPane.showMessageDialog(null, "Dados incorretos");
             }
             return null;
-        } catch (Exception e) {
+        } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(null, e);
             return null;
         }

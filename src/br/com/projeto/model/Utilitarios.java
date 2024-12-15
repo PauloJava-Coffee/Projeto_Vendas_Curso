@@ -62,9 +62,7 @@ public class Utilitarios {
                         suporte.setEndereco(result.getText());
                     case "logradouro" ->
                         suporte.setEndereco(suporte.getEndereco() + " " + result.getText());
-
                 }
-
             }
             return suporte;
 
