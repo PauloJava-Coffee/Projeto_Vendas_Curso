@@ -93,6 +93,65 @@ public class FornecedoresDAO {
         return lista;
 
     }
+//Buscar Por nome 
+    public Fornecedores buscarPorNome(String nome) {
+        String select = "select * from tb_fornecedores where nome like ?";
+        Fornecedores dados = new Fornecedores();
+        try {
+            preparar = conexao.prepareStatement(select);
+            preparar.setString(1, nome + "%");
+            result = preparar.executeQuery();
+            if (result.next()) { 
+                dados.setId(result.getInt(1));
+                dados.setNome(result.getString(2));
+                dados.setCnpj(result.getString(3));
+                dados.setEmail(result.getString(4));
+                dados.setTelefone(result.getString(5));
+                dados.setCelular(result.getString(6));
+                dados.setCep(result.getString(7));
+                dados.setEndereco(result.getString(8));
+                dados.setNumero(result.getInt(9));
+                dados.setComplemento(result.getString(10));
+                dados.setBairro(result.getString(11));
+                dados.setCidade(result.getString(12));
+                dados.setEstado(result.getString(13));
+            }
+        } catch (SQLException e) {
+            return null;
+        }
+        return dados;
+
+    }
+
+    public Fornecedores buscarPorId(int id) {
+        Fornecedores fornecedor = new Fornecedores();
+        String select = "select * from tb_fornecedores where id=?";
+        try {
+            preparar = conexao.prepareStatement(select);
+            preparar.setInt(1, id);
+            result = preparar.executeQuery();
+            if (result.next()) {
+                fornecedor.setId(result.getInt(1));
+                fornecedor.setNome(result.getString(2));
+                fornecedor.setCnpj(result.getString(3));
+                fornecedor.setEmail(result.getString(4));
+                fornecedor.setTelefone(result.getString(5));
+                fornecedor.setCelular(result.getString(6));
+                fornecedor.setCep(result.getString(7));
+                fornecedor.setEndereco(result.getString(8));
+                fornecedor.setNumero(result.getInt(9));
+                fornecedor.setComplemento(result.getString(10));
+                fornecedor.setBairro(result.getString(11));
+                fornecedor.setCidade(result.getString(12));
+                fornecedor.setEstado(result.getString(13));
+            }
+            preparar.close();
+        } catch (Exception e) {
+            return null;
+        }
+
+        return fornecedor;
+    }
 
     public void cadastrarFornecedor(Fornecedores dados) {
         String insert = "insert into tb_fornecedores values(?,?,?,?,?,?,?,?,?,?,?,?,?)";

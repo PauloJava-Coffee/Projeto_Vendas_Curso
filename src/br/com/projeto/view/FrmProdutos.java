@@ -14,6 +14,7 @@ import br.com.projeto.model.Utilitarios;
 import java.awt.Image;
 import java.util.List;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -25,30 +26,11 @@ public class FrmProdutos extends javax.swing.JFrame {
     /**
      * Creates new form FrmClientes
      */
-    //Metodo listar na tabela
-    public void listar() {
-
-        ClientesDAO data = new ClientesDAO();
-        List<Clientes> lista = data.listarClientes();
-        DefaultTableModel dados = (DefaultTableModel) tblProdutos.getModel();
-        dados.setNumRows(0);
-        for (Clientes c : lista) {
-            dados.addRow(new Object[]{
-                c.getId(),
-                c.getNome(),
-                c.getRg(),
-                c.getCpf(),
-                c.getEmail(),
-                c.getTelefone(),
-                c.getCelular(),
-                c.getCep(),
-                c.getEndereco(),
-                c.getNumero(),
-                c.getComplemento(),
-                c.getBairro(),
-                c.getCidade(),
-                c.getEstado()
-            });
+    private void listarFornecedores() {
+        List<Fornecedores> dados = new FornecedoresDAO().buscarFornecedores();
+        cboFornecedor.removeAll();
+        for (Fornecedores f : dados) {
+            cboFornecedor.addItem(f);
         }
     }
 
@@ -56,70 +38,81 @@ public class FrmProdutos extends javax.swing.JFrame {
     public FrmProdutos() {
         initComponents();
         //Colocando Icone de favorito na tela de clientes
-        ImageIcon icone = new ImageIcon(getClass().getResource("/imagens/clientes.png"));
+        ImageIcon icone = new ImageIcon(getClass().getResource("/imagens/produtos.png"));
         Image imagem = icone.getImage();
         this.setIconImage(imagem);
     }
 
-
     //Alterar dados do cadastro do cliente
     private void alterar() {
-        Clientes model = new Clientes();
-        ClientesDAO dao = new ClientesDAO();
+        Produtos produto = new Produtos();
+        produto.setId(Integer.parseInt(txtCodigo.getText()));
+        produto.setDescricao(txtDescricao.getText());
+        produto.setPreco(Double.parseDouble(txtPreco.getText().replace(',', '.')));
+        produto.setQtd_estoque(Integer.parseInt(txtQtd.getText()));
+        produto.setFornecedor((Fornecedores) cboFornecedor.getSelectedItem());
 
-        model.setId(Integer.parseInt(txtCodigo.getText()));
-        model.setNome(txtDescricao.getText());
-        model.setEstado(cboFornecedor.getSelectedItem().toString());
-
-        dao.update(model);
+        new ProdutosDAO().update(produto);
 
     }
-
-    //Método buscar cliente por  nome
-    private void buscar() {
-        ClientesDAO dao = new ClientesDAO();
-        DefaultTableModel dados = (DefaultTableModel) tblProdutos.getModel();
-        dados.setNumRows(0);
-
-        List<Clientes> lista = dao.buscarPorNome(txtBuscar.getText());
-
-        for (Clientes c : lista) {
-            dados.addRow(new Object[]{
-                c.getId(),
-                c.getNome(),
-                c.getRg(),
-                c.getCpf(),
-                c.getEmail(),
-                c.getTelefone(),
-                c.getCelular(),
-                c.getCep(),
-                c.getEndereco(),
-                c.getNumero(),
-                c.getComplemento(),
-                c.getBairro(),
-                c.getCidade(),
-                c.getEstado()
+    private void listarProdutos() {
+        DefaultTableModel table = (DefaultTableModel) tblProdutos.getModel();
+        table.setNumRows(0);
+        List<Produtos> dados = new ProdutosDAO().listarProdutos();
+        for (Produtos p : dados) {
+            table.addRow(new Object[]{
+                p.getId(),
+                p.getDescricao(),
+                p.getPreco(),
+                p.getQtd_estoque(),
+                p.getFornecedor().getNome()
             });
         }
     }
-
-    private void listarFornecedores() {
-        cboFornecedor.removeAllItems();
-        List<Fornecedores> lista = new FornecedoresDAO().buscarFornecedores();
-        for (Fornecedores f : lista) {
-            cboFornecedor.addItem(f);
+    
+    private void listarPorNome(){
+        DefaultTableModel table = (DefaultTableModel) tblProdutos.getModel();
+        table.setNumRows(0);
+        List<Produtos> dados = new ProdutosDAO().listarPorNome(txtBuscar.getText());
+        for(Produtos p: dados){
+            table.addRow(new Object[]{
+                p.getId(),
+                p.getDescricao(),
+                p.getPreco(),
+                p.getQtd_estoque(),
+                p.getFornecedor().getNome()
+            });
         }
-
     }
-    private void cadastrar(){
+    
+    //Busca um registro pela descrição
+    private void buscarPorNome(){
+        Produtos produto = new ProdutosDAO().buscarPorNome(txtDescricao.getText());
+     
+            txtCodigo.setText(String.valueOf(produto.getId()));
+            txtDescricao.setText(produto.getDescricao());
+            txtPreco.setText(String.valueOf(produto.getPreco()));
+            txtQtd.setText(String.valueOf(produto.getQtd_estoque()));
+            cboFornecedor.getModel().setSelectedItem(produto.getFornecedor());
+        
+        
+    }
+
+    private void cadastrar() {
         Produtos produto = new Produtos();
         produto.setDescricao(txtDescricao.getText());
-        produto.setPreco(Double.parseDouble(txtPreco.getText()));
+        produto.setPreco(Double.parseDouble(txtPreco.getText().replace(",", ".")));
         produto.setQtd_estoque(Integer.parseInt(txtQtd.getText()));
         produto.setFornecedor((Fornecedores) cboFornecedor.getSelectedItem());
-        
+
         new ProdutosDAO().cadastrarProduto(produto);
-        
+    }
+
+    private void deletar() {
+        int confirm = JOptionPane.showConfirmDialog(null, "Atenção", "Confirma??", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            new ProdutosDAO().deletarProduto(txtCodigo.getText());
+        }
     }
 
     /**
@@ -158,7 +151,7 @@ public class FrmProdutos extends javax.swing.JFrame {
         btnPesquisarCpf = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Controle de clientes");
+        setTitle("Controle de Produtos");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
                 formWindowActivated(evt);
@@ -190,7 +183,7 @@ public class FrmProdutos extends javax.swing.JFrame {
         );
 
         jLabel22.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel22.setText("UF:");
+        jLabel22.setText("Fornecedor:");
 
         jLabel23.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel23.setText("Preço:");
@@ -236,7 +229,7 @@ public class FrmProdutos extends javax.swing.JFrame {
                         .addGroup(painelCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel23)
                             .addComponent(jLabel22))
-                        .addGap(38, 38, 38)
+                        .addGap(1, 1, 1)
                         .addGroup(painelCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(painelCadastroLayout.createSequentialGroup()
                                 .addComponent(cboFornecedor, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -284,9 +277,14 @@ public class FrmProdutos extends javax.swing.JFrame {
         tblPrincipal.addTab("Dados do Produto", painelCadastro);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel2.setText("Fornecedor:");
+        jLabel2.setText("Produto:");
 
         txtBuscar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtBuscar.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                txtBuscarCaretUpdate(evt);
+            }
+        });
 
         btnBuscar.setText("Buscar");
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
@@ -342,7 +340,7 @@ public class FrmProdutos extends javax.swing.JFrame {
                 .addContainerGap(136, Short.MAX_VALUE))
         );
 
-        tblPrincipal.addTab("Buscar clientes", jPanel2);
+        tblPrincipal.addTab("Buscar Produtoss", jPanel2);
 
         btnSalvar.setText("Salvar");
         btnSalvar.addActionListener(new java.awt.event.ActionListener() {
@@ -366,6 +364,11 @@ public class FrmProdutos extends javax.swing.JFrame {
         });
 
         btnNovo.setText("Novo");
+        btnNovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNovoActionPerformed(evt);
+            }
+        });
 
         btnPesquisarCpf.setText("Pesquisar");
         btnPesquisarCpf.addActionListener(new java.awt.event.ActionListener() {
@@ -420,7 +423,7 @@ public class FrmProdutos extends javax.swing.JFrame {
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         // TODO add your handling code here:
-     cadastrar();
+        cadastrar();
         new Utilitarios().limparCampos(painelCadastro);
     }//GEN-LAST:event_btnSalvarActionPerformed
 
@@ -432,36 +435,38 @@ public class FrmProdutos extends javax.swing.JFrame {
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         // TODO add your handling code here:
-        ClientesDAO dao = new ClientesDAO();
-        Clientes model = new Clientes();
-
-        model.setId(Integer.parseInt(txtCodigo.getText()));
-        dao.excluirCliente(model);
-        new Utilitarios().limparCampos(painelCadastro);
+        deletar();
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         // TODO add your handling code here:
-        //listar();
+        listarProdutos();
         listarFornecedores();
+
     }//GEN-LAST:event_formWindowActivated
 
     private void tblProdutosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProdutosMouseClicked
         // Pega os dados do cliente selecionado pelo id na tabela
+
         tblPrincipal.setSelectedIndex(0);
-        txtCodigo.setText(tblProdutos.getValueAt(tblProdutos.getSelectedRow(), 0).toString());
-        txtDescricao.setText(tblProdutos.getValueAt(tblProdutos.getSelectedRow(), 1).toString());
-        cboFornecedor.setSelectedItem(tblProdutos.getValueAt(tblProdutos.getSelectedRow(), 12).toString());
+        int linha = tblProdutos.getSelectedRow();
+        txtCodigo.setText(tblProdutos.getValueAt(linha, 0).toString());
+        txtDescricao.setText(tblProdutos.getValueAt(linha, 1).toString());
+        txtPreco.setText(tblProdutos.getValueAt(linha, 2).toString().replace('.', ','));
+        txtQtd.setText(tblProdutos.getValueAt(linha, 3).toString());
+        Fornecedores fornecedor = (Fornecedores) new FornecedoresDAO().buscarPorNome(tblProdutos.getValueAt(linha, 4).toString());
+        cboFornecedor.getModel().setSelectedItem(fornecedor);
 
     }//GEN-LAST:event_tblProdutosMouseClicked
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        buscar();
+      
 
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnPesquisarCpfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarCpfActionPerformed
         // TODO add your handling code here:
+        buscarPorNome();
 
 
     }//GEN-LAST:event_btnPesquisarCpfActionPerformed
@@ -473,6 +478,15 @@ public class FrmProdutos extends javax.swing.JFrame {
     private void txtQtdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtQtdActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtQtdActionPerformed
+
+    private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnNovoActionPerformed
+
+    private void txtBuscarCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtBuscarCaretUpdate
+        // TODO add your handling code here:
+        listarPorNome();
+    }//GEN-LAST:event_txtBuscarCaretUpdate
 
     /**
      * @param args the command line arguments

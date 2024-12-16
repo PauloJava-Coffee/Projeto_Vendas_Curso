@@ -82,10 +82,13 @@
                 <Property name="text" type="java.lang.String" value="Controle de estoque"/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem5">
+            <MenuItem class="javax.swing.JMenuItem" name="menuItemproduto">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Consulta de produtos"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuItemprodutoActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>

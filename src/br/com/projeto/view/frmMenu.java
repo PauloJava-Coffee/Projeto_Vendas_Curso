@@ -22,6 +22,7 @@ public class frmMenu extends javax.swing.JFrame {
     private final FrmClientes telaClientes = new FrmClientes();
     private final FrmFuncionarios telaFuncioonarios = new FrmFuncionarios();
     private final FrmFornecedores telaFornecedores = new FrmFornecedores();
+    private final FrmProdutos telaProdutos = new FrmProdutos();
 
     //CONSTRUTOR
     public frmMenu() {
@@ -74,7 +75,7 @@ public class frmMenu extends javax.swing.JFrame {
         TelaFornecedores = new javax.swing.JMenuItem();
         jMenu6 = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
+        menuItemproduto = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
@@ -175,8 +176,13 @@ public class frmMenu extends javax.swing.JFrame {
         jMenuItem4.setText("Controle de estoque");
         jMenu6.add(jMenuItem4);
 
-        jMenuItem5.setText("Consulta de produtos");
-        jMenu6.add(jMenuItem5);
+        menuItemproduto.setText("Consulta de produtos");
+        menuItemproduto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemprodutoActionPerformed(evt);
+            }
+        });
+        jMenu6.add(menuItemproduto);
 
         jMenuBar1.add(jMenu6);
 
@@ -271,9 +277,14 @@ public class frmMenu extends javax.swing.JFrame {
 
     private void TelaFornecedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TelaFornecedoresActionPerformed
         // TODO add your handling code here:
-         exibirFormulario(telaFornecedores);
+        exibirFormulario(telaFornecedores);
 
     }//GEN-LAST:event_TelaFornecedoresActionPerformed
+
+    private void menuItemprodutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemprodutoActionPerformed
+        // Produtos
+        exibirFormulario(telaProdutos);
+    }//GEN-LAST:event_menuItemprodutoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -319,7 +330,6 @@ public class frmMenu extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
@@ -330,6 +340,7 @@ public class frmMenu extends javax.swing.JFrame {
     public static javax.swing.JMenu menuFuncionarios;
     private javax.swing.JMenuItem menuItemClientes;
     private javax.swing.JMenuItem menuItemFuncionarios;
+    private javax.swing.JMenuItem menuItemproduto;
     private javax.swing.JMenu menuSair;
     // End of variables declaration//GEN-END:variables
 }
